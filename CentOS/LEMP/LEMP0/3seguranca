@@ -1,0 +1,34 @@
+Agora vou aplicar várias ferramentas para reforçar a segurança
+
+== Fazer o download dos scripts da pasta /root/backup
+
+cd /root/backup
+tar czpvf centos7lemp.tar.gz *
+cp centos7lemp.tar.gz /home/ribafs
+chown ribafs:ribafs /home/ribafs/centos7lemp.tar.gz
+
+No desktop
+scp -p porta ribafs@IP:/home/ribafs/centos7lemp.tar.gz .
+
+
+== Criar um script para limpar o cache de RAM
+
+nano /root/m
+
+Contendo as linhas
+
+sysctl -w vm.drop_caches=3
+swapoff -a
+swapon -a
+
+Rodar com
+
+Veja antes
+free -m
+
+sh /root/m
+
+Veja novamente
+free -m
+
+

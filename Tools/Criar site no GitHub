@@ -1,0 +1,71 @@
+Criar site no GitHub
+
+Criar conta em
+http://github.com
+https://help.github.com/categories/customizing-github-pages/
+
+Conta - login
+
+Após criar a cotna crie um novo repositório
+
+Repository name - login.github.com
+
+GitHub Pages
+
+Source - Master Branch
+
+
+Enviar chave do SSH para o GitHub
+
+No terminal digite
+
+ssh-keygen -t rsa
+
+Então
+
+cat ~/.ssh/id_rsa.pub
+
+cat ~/.ssh/id_rsa.pub 
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzU7Txqsmggzd2wZPhlQNKKahtrbYEMnzDlTiPQiRTyNW+MTVRm1LmLbnMnS5pMQMRY45HEoV7efAPhWDpjcWzQ7mp7yTJw1ahvAlXdw2UxBDzdZm17nXZ78Stm9MeoEuVv024T+mJ8Vhiti4er0iJEbXxGAI8CQB5CJnKMljrJZdjFrw3l25h+Z9LWvvm9CJzu8QH8KiTTM9nmq2klwmT8ZwjIoZ7y6+RfHh3f3BXyDe9g48r1clbO3dj072hGyFU5PMP1f4457SukSFsHxl2R6465HkaG6kCro+sYIA3C6N75rfRjFezET8Sf0mQ2zadwG7kgq4brdW6vsKwGS71 ribafs@deskmt
+
+
+Copie para a memória
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzU7Txqsmggzd2wZPhlQNKKahtrbYEMnzDlTiPQiRTyNW+MTVRm1LmLbnMnS5pMQMRY45HEoV7efAPhWDpjcWzQ7mp7yTJw1ahvAlXdw2UxBDzdZm17nXZ78Stm9MeoEuVv024T+mJ8Vhiti4er0iJEbXxGAI8CQB5CJnKMljrJZdjFrw3l25h+Z9LWvvm9CJzu8QH8KiTTM9nmq2klwmT8ZwjIoZ7y6+RfHh3f3BXyDe9g48r1clbO3dj072hGyFU5PMP1f4457SukSFsHxl2R6465HkaG6kCro+sYIA3C6N75rfRjFezET8Sf0mQ2zadwG7kgq4brdW6vsKwGS71 ribafs@deskmt
+
+E acesse sua conta no GitHub
+
+Clique no seu avatar acima e à direita - Settings
+
+SSH and GPG keys
+
+New SSH key
+
+Title - trabalho (exemplo)
+
+Key
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzU7Txqsmggzd2wZPhlQNKKahtrbYEMnzDlTiPQiRTyNW+MTVRm1LmLbnMnS5pMQMRY45HEoV7efAPhWDpjcWzQ7mp7yTJw1ahvAlXdw2UxBDzdZm17nXZ78Stm9MeoEuVv024T+mJ8Vhiti4er0iJEbXxGAI8CQB5CJnKMljrJZdjFrw3l25h+Z9LWvvm9CJzu8QH8KiTTM9nmq2klwmT8ZwjIoZ7y6+RfHh3f3BXyDe9g48r1clbO3dj072hGyFU5PMP1f4457SukSFsHxl2R6465HkaG6kCro+sYIA3C6N75rfRjFezET8Sf0mQ2zadwG7kgq4brdW6vsKwGS71 ribafs@deskmt
+
+Agora enviar o conteúdo do site do seu desktop para o GitHub via git no terminal
+
+Acesse o diretório onde estão os arquivos e digite a sequência de comandos (trocando pelos seus dados):
+
+git config --global user.email "ribafs@gmx.com"
+git config --global user.name "Ribamar FS"
+git init
+git add .
+git commit -m "Primeiro commit"
+git remote add origin git@github.com:login/login.github.io.git
+git push -f origin master
+
+Também podemos usar um domínio nosso em um site gratuito do GitHub
+
+- Acesse o repositório
+- Vá em Settings
+- Custom domain
+Digite o domínio e clique em Save
+
+https://help.github.com/articles/using-a-custom-domain-with-github-pages/
+

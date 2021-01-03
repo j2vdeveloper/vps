@@ -1,0 +1,138 @@
+Criei um servidor do tipo application LEMP com CentOS 7 64
+
+207.246.78.135
+
+
+== Ajustes Iniciais
+
+Acessei pela console como root com a senha fornecida pela administração do Cultr
+
+Alterei a senha
+passwd
+
+Criei um diretório para backup dos scripts, antes de alterálos
+mkdir /root/backup
+
+Adicionei um usuário
+
+adduser ribafs
+passwd ribafs
+
+Adicionei ao grupo do root
+usermod -aG wheel ribafs
+
+Adicionei ao sudoers
+
+cp /etc/sudoers /root/backup
+
+nano /etc/sudoers
+
+Adicionar abaixo da linha do root
+ribafs	ALL=(ALL)	NOPASSWD:ALL
+
+Adicionei ao ssh e fiz ajustes
+
+Port 65522
+Grace  30
+PermitRootLogin no
+
+Adicionei ao final
+AllowUsers ribafs
+
+service sshd restart
+
+Acessei pelo terminal do desktop
+
+ssh -p 65522 ribafs@IP
+
+
+== Configurar o firewalld
+
+iptables -F
+iptables -X
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+
+firewall-cmd --zone=public --permanent --add-service=http
+firewall-cmd --zone=public --permanent --add-service=https
+
+firewall-cmd --zone=public --permanent --remove-service=ssh
+
+firewall-cmd --zone=public --add-port=65522/tcp --permanent
+
+firewall-cmd --zone=public --permanent --list-services
+
+firewall-cmd --reload
+systemctl restart firewalld.service
+
+
+== Atualizar
+
+yum update -y
+
+Instalar pacotes básicos
+yum install -y mc
+
+Adicionar ribafs ao grupo do nginx
+usermod -aG php-fpm ribafs
+
+Para rodar as permissões com
+
+Criar script chamado perms no /root
+
+nano /root/perms
+
+#!/bin/sh
+clear;
+echo "Aguarde enquanto configuro as permissões do /usr/share/nginx/html/$1";
+echo "";
+chown -R ribafs:php-fpm /usr/share/nginx/html/$1;
+find /usr/share/nginx/html/$1 -type d -exec chmod 775 {} \;
+find /usr/share/nginx/html/$1 -type f -exec chmod 664 {} \;
+echo "";
+echo "Concluído!";
+
+Rodar em /usr/share/nginx/html/portal com
+
+sh /root/perms portal
+
+== Testes
+
+http://IP
+
+nano /usr/share/nginx/html/info.php
+
+<?php
+phpinfo();
+
+http://IP/info.php
+
+Inclusive o SSL está instalado
+
+https://IP/info.php
+
+
+== Criar uma partição de swap com 2GB
+
+dd if=/dev/zero of=/swapfile bs=1M count=2048
+mkswap /swapfile
+chmod 600 /swapfile
+swapon /swapfile
+
+Adicionar ao fstab
+nano /etc/fstab
+/swapfile	swap	swap	defaults	0	0
+
+Testar
+free -m
+
+
+Agora vou enviar o site em Joomla para o servidor para testar através do arquivo
+
+2joomla
+

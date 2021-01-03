@@ -1,0 +1,79 @@
+Enviar o site para o Servidor
+
+Acessar o desktop
+
+- Copiar o arquivo zip para o /home/ribafs
+
+- Enviar os arquivos de backup criado com o componente SimpleBackup do desktop para o servidor executando no terminal:
+
+scp -P 55522 portal.zip ribafs@45.63.104.148:/tmp
+
+
+== Criar o banco de dados para o site e o usuário para o mesmo
+
+Acessar o servidor
+
+cd /tmp
+
+mysql -u root -p
+
+CREATE DATABASE portal CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER 'portal'@'localhost' IDENTIFIED BY 'senhaforte';
+GRANT ALL PRIVILEGES ON portal.* TO 'portal'@'localhost';
+FLUSH PRIVILEGES;
+\q
+
+mysql -uroot -p portal < portal.sql
+
+
+unzip portal.zip -d /var/www/html
+
+Mudar as permissões do /var/www/html executando
+
+Corrigir permissões
+perms
+
+Remover
+rm /var/www/html/index.html
+
+Ajustar configuration.php
+
+nano /var/www/html/configuration.php
+
+logs e tmp
+
+
+== Ajustes no php.ini
+
+nano /etc/php/7.0/apache2/php.ini
+
+Altere os dois abaixo
+
+date.timezone = America/Fortaleza
+output_buffering = Off
+
+service apache2 restart
+
+
+Abrir o site em
+
+http://45.63.104.148
+
+https://45.63.104.148/administrator
+
+
+== Backup
+
+Agora faça um backup completo usando o componente SimpleBackup e quando terminar restaure por exemplo para a pasta
+/var/www/html/portal2
+
+Crie o banco portal2, pode ser o mesmo user e senha
+
+Restaure pela web:
+
+http://45.63.104.148/portal2
+
+
+== Agora efetuar backups do servidor
+
+Usando o arquivo 6backup

@@ -1,0 +1,209 @@
+Instalação de site em Joomla no servidor LEMP com CentOS7
+
+Versões
+
+php - 7.1.14
+nginx - 1.12.2
+mysql - 5.7.21
+Joomla 3.8.5
+
+Os pacotes do PHP são nomeados com
+php71u-
+
+
+O Nginx neste pacote LEMP da Vultr tem dois arquivos de configuração para sites:
+/etc/nginx/conf.d/http.conf e https.conf
+
+Vou enviar o site para a pasta portal
+/usr/share/nginx/html/portal
+
+Copio o arquivo zip de backup do site criado com o Akeeba Backup para a pasta /home/ribafs do meu desktop
+
+Acesso o terminal e enviar para o /tmp do servidor:
+scp -P 55522 portal* ribafs@IP:/tmp
+
+
+== Reforçar segurança do mysql
+
+Executar
+
+mysql_secure_installation 
+
+Securing the MySQL server deployment.
+
+Press y|Y for Yes, any other key for No: n
+Using existing password for root.
+Change the password for root ? ((Press y|Y for Yes, any other key for No) : y
+
+Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
+
+Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
+
+Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
+	
+Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
+Success.
+
+All done! 
+
+
+== Atualizar o Servidor
+
+yum update -y
+reboot
+
+
+== Instalar algumas extensões
+
+Como o servidor LEMP criado é apenas padrão e não contém todas as extensões necessárias para um site com Joomla, então instalaremos mais algumas.
+
+Verifiquemos se estão instalados as extensões
+
+php-bcmath (requer instalação)
+php-mbstring ou php71u-mbstring (instalado)
+php-zip (instalado)
+php-xml (instalado)
+
+Listando os módulos do php instalados
+
+php -m | less
+
+Para verificar usamos o comando
+
+php -m | grep extensão
+
+Exemplo:
+php -m | grep php-bcmath
+php -m | grep php71u-bcmath
+
+Assim testamos todas as acima. As que não aparecerem nada precisamos instalar.
+
+Instalar
+yum install php-bcmath
+
+Em caso de conflito use o comando
+yum install php-bcmath --skip-broken
+
+service nginx restart
+service php-fpm restart
+
+
+== Criar banco de dados e usuário para o banco do site
+
+mysql -uroot -p
+
+create database portal;
+
+GRANT ALL PRIVILEGES ON portal.* TO portal@localhost IDENTIFIED BY 'senhaforte' WITH GRANT OPTION;
+\q
+
+cd /tmp
+
+
+== Descompactar o backup para o site
+
+unzip portal.zip -d /usr/share/nginx/html/portal
+
+
+== Ajustar as permissões
+
+sh /root/perms portal
+
+
+== Instalar pelo site restaurando backup do Akeeba Backup
+
+http://45.63.104.148/portal
+
+Abriu normalmente o Instalador do Akeeba
+
+Acontece que alerta sobre uma configuração do PHP que precisa ser ajustada.
+
+nano /etc/php.ini
+
+output_buffering = Off
+
+Aproveitemos e ajustemos também esta
+date.timezone = America/Fortaleza
+
+service nginx restart
+service php-fpm restart
+
+Voltar ao site e teclar F5 ou clicar em Check again
+
+Se tiver alguma dúvida veja o tutorial
+https://www.akeebabackup.com/documentation/solo/angie-joomla.html#angie-joomla-first
+
+Apenas clique em Next
+
+Database server host name - localhost
+User name - portal
+Password - senhaforte (a que usou na criação do usuário)
+Database name - portal
+
+Clique em Next
+
+Caso apareça um popup avisando que o banco contém caracteres especiais apenas clique em OK no popup.
+
+Clique em Next step no popup.
+
+Role a tela e preencha como achar melhor
+
+Super User settings
+
+Super User - ribafs
+E-mail - ribafs@gmail.com
+Password - minhasenha
+Password (repeat) - minhasenha
+
+Clique em Next
+
+Clique no botão Remove the installation directory
+
+Clique no botão do popup Visit your site's front-end
+
+Depois disso ele já abre o site
+
+
+== Ajustando o Nginx para o Joomla
+
+Mas ao clicar num link ele não encontrou, dá erro 404.
+
+Preciso adicionar este bloco abaixo ao http.conf e ao https.conf
+Logo abaixo da linha
+error_log /var/log/nginx/http_error.log;
+
+nano /etc/nginx/conf.d/http.conf
+
+    location / {
+        try_files $uri $uri/ /portal/index.php?$args;
+    }
+
+service nginx restart
+service php-fpm restart
+
+Agora funcionou beleza.
+
+
+== Testando o administrator
+
+Lembrando que o backup tinha forçado SSL no administrator
+Quando acessei ele já abriu como HTTPS
+
+Alterei uma configuração no administrator e salvei sem problema.
+
+Fiz um backup do site usando o componente Akeeba Backup e funcionou normalmente.
+
+Movi o arquivo gerado para a pasta /tmp
+mv /usr/share/nginx/html/portal/administrator/components/com_akeeba/backup/portal-20180307-194240.zip /tmp
+
+Fui ao desktop e baixei o backup
+scp -P 55522 ribafs@45.63.104.148:/tmp/portal* .
+
+
+
+== Agora vou implementar a autenticação no Nginx para usar no administrator
+
+Usando o arquivo
+
+3auth
+

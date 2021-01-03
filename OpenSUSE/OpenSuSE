@@ -1,0 +1,73 @@
+OpenSuSE
+
+sudo zypper update
+
+sudo zypper install apache2
+
+sudo systemctl start apache2
+
+sudo systemctl enable apache2
+
+systemctl status apache2
+
+sudo httpd -v
+
+sudo nano /srv/www/htdocs/index.html
+
+<html> 
+<body> 
+  <h1> It works!</h1> 
+</body> 
+</html>
+
+Firewall
+
+sudo nano /etc/sysconfig/SuSEfirewall2
+
+Find the following line.
+FW_CONFIGURATIONS_EXT=""
+
+Change it to the following to allow public access to port 80.
+FW_CONFIGURATIONS_EXT="apache2"
+
+Save and close the file. Then restart SuSE firewall.
+sudo systemctl restart SuSEfirewall2
+
+Finally, we need to make wwwrun (Apache user) as the owner of Document root.
+sudo chown wwwrun /srv/www/htdocs/ -R
+
+sudo zypper install mariadb mariadb-client mariadb-tools
+
+sudo systemctl start mysql
+
+sudo systemctl enable mysql
+
+systemctl status mysql
+
+mysql --version
+
+mysql -u root
+
+sudo mysql_secure_installation
+
+mysql -u root -p
+
+sudo zypper install php7 php7-mysql apache2-mod_php7
+
+sudo a2enmod php7
+
+sudo systemctl restart apache2
+
+sudo nano /srv/www/htdocs/test.php
+
+<?php phpinfo(); ?>
+
+localhost/test.php.
+
+sudo zypper install phpMyAdmin
+
+sudo systemctl restart apache2
+
+localhost/phpMyAdmin
+
+https://www.linuxbabe.com/opensuse/apache-mariadb-php7-lamp-opensuse-leap-42-2

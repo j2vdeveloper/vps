@@ -1,0 +1,14 @@
+Backup final dos scripts
+
+cd /root/backup
+
+cp /etc/php.ini /root/backup/OKphp.ini
+cp /etc/php-fpm.d/www.conf /root/backup/OKwww.conf
+cp /etc/nginx/conf.d/https.conf /root/backup/OKhttps.conf
+
+
+Backup do site
+
+Para isso usamos o componente Akeeba Backup
+Movemos o backup criado e guardamos com bastante cuidado o backup.
+

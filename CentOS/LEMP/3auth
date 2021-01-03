@@ -1,0 +1,89 @@
+Proteger diretório com o Nginx
+
+Instalar
+yum install -y httpd-tools
+
+htpasswd -c /etc/nginx/.htpasswd ribafs
+
+cat /etc/nginx/.htpasswd
+
+Editar o default.conf e alterar assim deixando assim:
+
+nano /etc/nginx/conf.d/http.conf
+
+
+# Sample LEMP vhost file from VULTR. The default NGINX file is in /var/default-conf/nginx/conf.d
+
+server {
+        listen 80 default_server;
+        server_name _;
+
+        root /usr/share/nginx/html;
+        index index.php index.html;
+
+	    auth_basic           "Área Restrita";
+	    auth_basic_user_file /etc/nginx/.htpasswd;
+
+        # set max upload size
+        client_max_body_size 2G;
+        fastcgi_buffers 64 4K;
+
+        access_log /var/log/nginx/http_access.log combined;
+        error_log /var/log/nginx/http_error.log;
+
+        location / {
+	        auth_basic	off;
+                try_files $uri $uri/ /portal/index.php?$args;
+        }
+
+		location /portal/administrator {
+	        auth_basic            "Acesso Restrito";
+	        auth_basic_user_file  /etc/nginx/.htpasswd;
+		}
+
+	    location = /favicon.ico {
+		        auth_basic	off;
+                log_not_found off;
+                access_log off;
+        }
+
+		location = /robots.txt {
+		        auth_basic	off;
+                allow all;
+                log_not_found off;
+                access_log off;
+        }
+
+		location ~ \.php$
+    	{
+		        auth_basic	off;
+                try_files      $uri =404;
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+    	}
+
+   		location ~* \.(htaccess|htpasswd) {
+	        deny all;
+    	}
+
+    	# set long EXPIRES header on static assets
+    	location ~* \.(?:jpg|jpeg|gif|bmp|ico|png|css|js|swf)$ {
+	        auth_basic	off;
+            expires 30d;
+            access_log off;
+    	}
+
+}
+
+
+Reiniciar o nginx
+service nginx restart
+
+Acesso ao administrator solicitando senha.
+
+
+Crédito
+https://www.nginx.com/resources/admin-guide/restricting-access-auth-basic/
+

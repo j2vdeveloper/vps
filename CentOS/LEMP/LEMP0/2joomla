@@ -1,0 +1,129 @@
+O Nginx tem dois arquivos
+
+/etc/nginx/conf.d/http.conf e https.conf
+
+Vou experimentar enviar o site para a pasta portal
+
+/usr/share/nginx/html/portal
+
+Copio os dois arquivos do site, o sql e o zip para a pasta /home/ribafs
+
+Acesso o terminal do desktop e envio assim:
+
+scp -p 55522 portal* ribafs@IP:/tmp
+
+
+== Reforçar segurança do mysql
+
+[root@ribafs tmp]# mysql_secure_installation 
+
+Securing the MySQL server deployment.
+
+
+VALIDATE PASSWORD PLUGIN can be used to test passwords
+and improve security. It checks the strength of password
+and allows the users to set only those passwords which are
+secure enough. Would you like to setup VALIDATE PASSWORD plugin?
+
+Press y|Y for Yes, any other key for No: n
+Using existing password for root.
+Change the password for root ? ((Press y|Y for Yes, any other key for No) : y
+
+New password: 
+
+Re-enter new password: 
+By default, a MySQL installation has an anonymous user,
+allowing anyone to log into MySQL without having to have
+a user account created for them. This is intended only for
+testing, and to make the installation go a bit smoother.
+You should remove them before moving into a production
+environment.
+
+Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
+Success.
+
+
+Normally, root should only be allowed to connect from
+'localhost'. This ensures that someone cannot guess at
+the root password from the network.
+
+
+Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
+Success.
+
+
+
+By default, MySQL comes with a database named 'test' that
+anyone can access. This is also intended only for testing,
+and should be removed before moving into a production
+environment.
+
+
+Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
+ - Dropping test database...
+Success.
+
+ - Removing privileges on test database...
+Success.
+
+Reloading the privilege tables will ensure that all changes
+made so far will take effect immediately.
+
+Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
+Success.
+
+All done! 
+
+== Criar banco de dados
+
+mysql -uroot -p
+
+create database portal;
+
+GRANT ALL PRIVILEGES ON portal.* TO portal@localhost IDENTIFIED BY 'senhaforte' WITH GRANT OPTION;
+
+\q
+
+Importar o script enviado
+
+cd /tmp
+
+mysql -uroot -p portal < portal.sql
+
+unzip portal.zip -d /usr/share/nginx/html/portal
+
+http://IP/portal
+
+Funcionou de primeira
+
+Mas ao clicar num link ele não encontrou. Espera
+
+Preciso adicionar esta linha abaixo ao http.conf e ao https.conf no bloco location /
+
+    location / {
+        try_files $uri $uri/ /portal/index.php?$args;
+    }
+
+service nginx restart
+
+Agora funcionou beleza.
+
+Alterei uma configuração no administrator e salvei sem problema.
+
+Fiz um backup do site usando o componente simple_backup e funcionou normalmente.
+
+Alterei tanto o http.conf quanto o https.conf
+
+root /usr/share/nginx/html/portal;
+
+E também
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+service nginx restart
+
+Agora tá tudo bem.
+
+

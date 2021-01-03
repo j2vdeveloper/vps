@@ -1,0 +1,39 @@
+==Ferramentas for Windows para acessar servidores linux:
+
+Putty - acessa o terminal - http://putty.org
+
+WinSCP - para transferência de arquivos do windows para linux e ao contrário.
+
+Scanners de vulnerabilidade
+http://sectools.org/tag/web-scanners/
+
+
+Cloud IDEs
+
+https://codeanywhere.com/editor/
+
+Muitas opções de container: 
+- blank com Ununtu 14.04 e CentOS 6.5, 
+- CakePHP em Ub e CO, 
+- Drupal
+- HTML
+- Java
+- Laravel 5
+- Magento 2
+- NodeJS
+- PHP 7
+- Python
+- Ruby
+- Wordpress
+
+GitHub
+BitBuckt
+e outros
+
+Shift+Insert para colar no terminal
+Aceita conexão ssh saindo na porta 22
+
+Forum Post Assistant
+https://github.com/ForumPostAssistant/FPA
+
+
