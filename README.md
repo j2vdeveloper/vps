@@ -13,7 +13,10 @@
 - FreeBSD
 - OpenBSD
 
-- Livros
+- Livros (4 e-books sobre o assunto. Para detalhes sobre os livros e mais 10, veja:
+
+    https://ribafs.me/livros
+
 - Segurança
 - Tools
 - Site
@@ -21,8 +24,7 @@
 - Servidores de E-mail
 
 	- iRedMail
-	- Zimbra
-        https://www.zimbra.com/downloads/zimbra-collaboration-open-source, exige 8GB de RAM
+	- Zimbra - https://www.zimbra.com/downloads/zimbra-collaboration-open-source, exige 8GB de RAM
     - Mail-in-abox - https://mailinabox.email/
     - https://github.com/modoboa/modoboa
     - https://github.com/sovereign/sovereign
